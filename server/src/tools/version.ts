@@ -11,11 +11,18 @@ export class Version {
     return Version.from(packageJson.version as string);
   }
 
+  toString() {
+    return this.parts.join('.');
+  }
+
   isNewerThan(version: Version) {
     for (let i = 0; i < this.parts.length; i += 1) {
-      const currentPart = this.parts[i];
+      const currentPart = this.parts[i]!;
       const currentVersionPart = version.parts[i];
 
+      if (!currentVersionPart) {
+        return false;
+      }
       if (currentPart && !currentVersionPart) {
         return true;
       }

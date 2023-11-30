@@ -251,9 +251,9 @@ const defaultDiacriticsRemovalMap = [
 
 const diacriticsMap: Record<string, string> = {};
 for (let i = 0; i < defaultDiacriticsRemovalMap.length; i += 1) {
-  const { letters } = defaultDiacriticsRemovalMap[i];
+  const { letters } = defaultDiacriticsRemovalMap[i]!;
   for (let j = 0; j < letters.length; j += 1) {
-    diacriticsMap[letters[j]] = defaultDiacriticsRemovalMap[i].base;
+    diacriticsMap[letters[j]!] = defaultDiacriticsRemovalMap[i]!.base;
   }
 }
 
@@ -266,7 +266,7 @@ export function removeDiacritics(str: string) {
 
 export function beforeParenthesis(str: string) {
   for (let i = 0; i < str.length; i += 1) {
-    if ('()[]'.includes(str[i])) {
+    if ('()[]'.includes(str[i]!)) {
       return str.slice(0, i).replace(/'/g, ' ');
     }
   }
@@ -276,7 +276,7 @@ export function beforeParenthesis(str: string) {
 export const retryPromise = async <T>(
   fn: () => Promise<T>,
   max: number,
-  time: number,
+  timeSeconds: number,
 ): Promise<T> => {
   if (max <= 0) {
     throw new Error('Cannot retry 0 times');
@@ -284,15 +284,22 @@ export const retryPromise = async <T>(
 
   let lastError: Error | undefined;
   for (let i = 0; i < max; i += 1) {
+    const isLastTry = i === max - 1;
     try {
       // eslint-disable-next-line no-await-in-loop
       const res = await fn();
       return res;
     } catch (e) {
       lastError = e;
-      logger.error(`Retrying crashed promise, ${i + 1}/${max}`, e);
+      logger.error(
+        `Retrying crashed promise, ${i + 1}/${max}${
+          isLastTry ? '' : `, retrying in ${timeSeconds} seconds...`
+        }`,
+      );
+    }
+    if (!isLastTry) {
       // eslint-disable-next-line no-await-in-loop
-      await wait(time * 1000);
+      await wait(timeSeconds * 1000);
     }
   }
   // lastError cannot be undefined here
@@ -306,9 +313,9 @@ export const minOfArray = <T>(array: T[], fn: (item: T) => number) => {
   }
 
   let minIndex = 0;
-  let min = fn(array[0]);
+  let min = fn(array[0]!);
   for (let i = 1; i < array.length; i += 1) {
-    const value = fn(array[i]);
+    const value = fn(array[i]!);
     if (value < min) {
       min = value;
       minIndex = i;
@@ -328,4 +335,20 @@ export function chunk<T>(array: T[], chunkSize: number) {
     chunks.push(currentChunk);
   }
   return chunks;
+}
+
+export function uniqBy<T>(source: T[], getId: (item: T) => string): T[] {
+  const final: T[] = [];
+  const alreadyAdded = new Set<string>();
+
+  for (const item of source) {
+    const itemId = getId(item);
+    if (alreadyAdded.has(itemId)) {
+      continue;
+    }
+    alreadyAdded.add(itemId);
+    final.push(item);
+  }
+
+  return final;
 }

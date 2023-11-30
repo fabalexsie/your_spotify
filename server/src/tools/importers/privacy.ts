@@ -9,7 +9,10 @@ import {
 import { setImporterStateCurrent } from '../../database/queries/importer';
 import { RecentlyPlayedTrack } from '../../database/schemas/track';
 import { User } from '../../database/schemas/user';
-import { saveMusics } from '../../spotify/dbTools';
+import {
+  getTracksAlbumsArtists,
+  storeTrackAlbumArtist,
+} from '../../spotify/dbTools';
 import { logger } from '../logger';
 import {
   beforeParenthesis,
@@ -68,13 +71,14 @@ export class PrivacyImporter
   };
 
   storeItems = async (userId: string, items: RecentlyPlayedTrack[]) => {
-    await saveMusics(
+    const { tracks, albums, artists } = await getTracksAlbumsArtists(
       userId,
       items.map(it => it.track),
     );
+    await storeTrackAlbumArtist({ tracks, albums, artists });
     const finalInfos: { played_at: Date; id: string }[] = [];
     for (let i = 0; i < items.length; i += 1) {
-      const item = items[i];
+      const item = items[i]!;
       const date = new Date(`${item.played_at}Z`);
       const duplicate = await getCloseTrackId(
         this.userId.toString(),
@@ -87,7 +91,7 @@ export class PrivacyImporter
       );
       if (duplicate.length > 0 || currentImportDuplicate) {
         logger.info(
-          `${item.track.name} - ${item.track.artists[0].name} was duplicate`,
+          `${item.track.name} - ${item.track.artists[0]?.name} was duplicate`,
         );
         continue;
       }
@@ -100,10 +104,10 @@ export class PrivacyImporter
     await addTrackIdsToUser(this.userId.toString(), finalInfos);
     const min = minOfArray(finalInfos, info => info.played_at.getTime());
     if (min) {
-      await storeFirstListenedAtIfLess(
-        this.userId,
-        finalInfos[min.minIndex].played_at,
-      );
+      const minInfo = finalInfos[min.minIndex];
+      if (minInfo) {
+        await storeFirstListenedAtIfLess(this.userId, minInfo.played_at);
+      }
     }
   };
 
@@ -160,7 +164,7 @@ export class PrivacyImporter
     }
     for (let i = this.currentItem; i < this.elements.length; i += 1) {
       this.currentItem = i;
-      const content = this.elements[i];
+      const content = this.elements[i]!;
       if (content.msPlayed < 30 * 1000) {
         // If track was played for less than 30 seconds
         logger.info(
@@ -202,7 +206,7 @@ export class PrivacyImporter
         item,
       );
       logger.info(
-        `Adding ${item.name} - ${item.artists[0].name} from data (${i}/${this.elements.length})`,
+        `Adding ${item.name} - ${item.artists[0]?.name} from data (${i}/${this.elements.length})`,
       );
       items.push({ track: item, played_at: content.endTime });
       if (items.length >= 20) {
