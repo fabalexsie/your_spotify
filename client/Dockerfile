@@ -14,7 +14,7 @@ COPY .eslintrc.js .eslintrc.js
 RUN sed -i 's@"extends": "../tsconfig.json",@@g' tsconfig.json 
 
 ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV:-production}
+ENV NODE_ENV ${NODE_ENV:-development}
 
 RUN yarn --frozen-lockfile --dev
 
