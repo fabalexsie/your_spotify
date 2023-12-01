@@ -22,6 +22,7 @@ import {
   getBestArtistsOfHour,
   getBestGenresOfHour,
   getLongestListeningSession,
+  getPublicationDatePer,
 } from '../database';
 import {
   CollaborativeMode,
@@ -245,6 +246,26 @@ router.get(
 
     try {
       const result = await getTimePer(user, start, end, timeSplit);
+      return res.status(200).send(result);
+    } catch (e) {
+      logger.error(e);
+      return res.status(500).end();
+    }
+  },
+);
+
+router.get(
+  '/publication_date_per',
+  validating(intervalPerSchema, 'query'),
+  isLoggedOrGuest,
+  async (req, res) => {
+    const { user } = req as LoggedRequest;
+    const { start, end, timeSplit } = req.query as TypedPayload<
+      typeof intervalPerSchema
+    >;
+
+    try {
+      const result = await getPublicationDatePer(user, start, end, timeSplit);
       return res.status(200).send(result);
     } catch (e) {
       logger.error(e);

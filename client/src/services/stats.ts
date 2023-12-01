@@ -216,6 +216,88 @@ export const buildXYDataObjSpread = <D extends { _id: DateId }>(
   );
 };
 
+const buildXYZDataWithGetters = <Dict extends Record<string, any>>(
+  data: { x: DateId }[],
+  start: Date,
+  end: Date,
+  doNotFillData: boolean,
+  getData: (index: number) => Dict,
+  getDefaultData: () => Dict,
+) => {
+  if (data.length === 0) {
+    return [];
+  }
+  const precision = getPrecisionFromDateId(data[0].x);
+  start = cleanDateFromPrecision(start, precision);
+  end = fresh(end, precision !== Precision.hour);
+  const built: (DefaultGraphItem & Dict)[] = [];
+
+  if (!doNotFillData) {
+    let currentDate = getDateFromIndex(0, start, precision);
+    for (
+      let currentIndex = 0;
+      currentDate.getTime() <= end.getTime();
+      currentIndex += 1
+    ) {
+      built.push({
+        x: currentIndex,
+        dateWithPrecision: {
+          date: currentDate,
+          precision,
+        },
+        ...getDefaultData(),
+      });
+      currentDate = getDateFromIndex(currentIndex, start, precision);
+    }
+  }
+
+  for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
+    const d = data[dataIndex];
+    const thisDate = buildFromDateId(d.x);
+    if (thisDate.getTime() < start.getTime()) {
+      continue;
+    }
+    if (thisDate.getTime() > end.getTime()) {
+      return built;
+    }
+    let currentIndex = 0;
+    let currentDate = getDateFromIndex(currentIndex, start, precision);
+    for (let i = 0; currentDate.getTime() !== thisDate.getTime(); i += 1) {
+      if (currentDate.getTime() > thisDate.getTime()) {
+        console.warn('Could not build missing data correctly');
+        return built;
+      }
+      currentIndex += 1;
+      currentDate = getDateFromIndex(currentIndex, start, precision);
+    }
+    built.push({
+      ...getData(dataIndex),
+      x: currentIndex,
+      dateWithPrecision: {
+        date: getDateFromIndex(currentIndex, start, precision),
+        precision,
+      },
+    });
+    // currentIndex += 1; // do not count upwards, because we could have multiple data points for the same date
+  }
+  return built;
+};
+
+export const buildXYZData = (
+  data: { x: DateId; y: number | null; z: number }[],
+  start: Date,
+  end: Date,
+  doNotFillData?: boolean,
+) =>
+  buildXYZDataWithGetters(
+    data,
+    start,
+    end,
+    Boolean(doNotFillData),
+    idx => ({ y: data[idx].y, z: data[idx].z }),
+    () => ({ y: null, z: 0 }),
+  );
+
 export const months = [
   'January',
   'February',

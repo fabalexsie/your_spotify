@@ -229,6 +229,15 @@ export const api = {
       end,
       timeSplit,
     }),
+  publicationDatePer: (start: Date, end: Date, timeSplit: Timesplit) =>
+    get<{ year: number; _id: DateId | null; count: number }[]>(
+      '/spotify/publication_date_per',
+      {
+        start,
+        end,
+        timeSplit,
+      },
+    ),
   featRatio: (start: Date, end: Date, timeSplit: Timesplit) =>
     get<
       {
