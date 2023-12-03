@@ -47,7 +47,7 @@ export default function SongPublicationDatePer({
   if (!result) {
     return (
       <LoadingImplementedChart
-        title="Song publication date"
+        title="Song publication date distribution"
         className={className}
       />
     );
@@ -58,7 +58,7 @@ export default function SongPublicationDatePer({
   }
 
   return (
-    <ChartCard title="Song publication date" className={className}>
+    <ChartCard title="Song publication date distribution" className={className}>
       <Scatter
         data={data}
         xFormat={formatX}

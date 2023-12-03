@@ -14,6 +14,7 @@ import TimeListenedPer from '../../components/ImplementedCharts/TimeListenedPer'
 import { selectUser } from '../../services/redux/modules/user/selector';
 import s from './index.module.css';
 import SongPublicationDatePer from '../../components/ImplementedCharts/SongPublicationDatePer';
+import SongPublicationDateBar from '../../components/ImplementedCharts/SongPublicationDateBar';
 
 export default function AllStats() {
   const user = useSelector(selectUser);
@@ -33,6 +34,9 @@ export default function AllStats() {
         <Grid container spacing={2}>
           <Grid item xs={12} md={12} lg={6}>
             <SongPublicationDatePer className={s.chart} />
+          </Grid>
+          <Grid item xs={12} md={12} lg={6}>
+            <SongPublicationDateBar className={s.chart} />
           </Grid>
           <Grid item xs={12} md={12} lg={6}>
             <BestArtistsBar className={s.chart} />
