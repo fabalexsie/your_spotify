@@ -267,7 +267,7 @@ export const getPublicationDatePer = async (
   return res;
 };
 
-export const getPublicationDateDistribution = async (
+export const getPublicationDate = async (
   user: User,
   start: Date,
   end: Date,
