@@ -29,15 +29,13 @@ export default function Scatter({
 }: ScatterProps) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ScatterChart data={data}>
+      <ScatterChart>
         <CartesianGrid />
         <XAxis
-          type="category"
-          allowDuplicatedCategory={false}
+          type="number"
           dataKey="x"
           tickFormatter={xFormat}
           style={{ fontWeight: 'bold' }}
-          scale="point"
         />
         <YAxis
           type="number"

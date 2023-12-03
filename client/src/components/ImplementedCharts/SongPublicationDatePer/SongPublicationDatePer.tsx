@@ -39,9 +39,9 @@ export default function SongPublicationDatePer({
   const formatY = useCallback((value: number) => `${value}`, []);
   const formatXAxisDateTooltip = useCallback<TitleFormatter<typeof data>>(
     (_, payload) =>
-      `${payload.z} listened song(s) published in ${payload.y} at ${formatX(
-        payload.x,
-      )}`,
+      `${payload.z} listened song${payload.z !== 1 ? 's' : ''} published in ${
+        payload.y
+      } at ${formatX(payload.x)}`,
     [formatX],
   );
 
