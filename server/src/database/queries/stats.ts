@@ -313,16 +313,16 @@ export const getPublicationDate = async (
       $group: {
         _id: { pubYear: '$pubYear' },
         count: { $sum: 1 },
-        year: { $first: '$pubYear' },
+        pubYear: { $first: '$pubYear' },
       },
     },
     {
       $match: {
-        year: { $ne: 0 },
+        pubYear: { $ne: 0 },
       },
     },
     {
-      $sort: { year: 1 },
+      $sort: { pubYear: 1 },
     },
   ]);
   return res;

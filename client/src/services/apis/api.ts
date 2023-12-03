@@ -239,7 +239,7 @@ export const api = {
       },
     ),
   publicationDateDistribution: (start: Date, end: Date) =>
-    get<{ year: number; _id: DateId | null; count: number }[]>(
+    get<{ pubYear: number; _id: DateId | null; count: number }[]>(
       '/spotify/publication_date',
       {
         start,

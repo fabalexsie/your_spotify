@@ -32,7 +32,7 @@ export default function SongPublicationDateBar({
   );
 
   const tooltipTitle = useCallback<TitleFormatter<typeof data>>(
-    ({ x }) => `Year ${result?.[x].year}`,
+    ({ x }) => `Year ${result?.[x].pubYear}`,
     [result],
   );
 
@@ -60,7 +60,7 @@ export default function SongPublicationDateBar({
     <ChartCard title="Song publication date" className={className}>
       <Bar
         data={data}
-        xFormat={x => `${result[x].year}`}
+        xFormat={x => `${result[x].pubYear}`}
         customTooltip={<Tooltip title={tooltipTitle} value={tooltipValue} />}
       />
     </ChartCard>
