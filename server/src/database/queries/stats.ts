@@ -250,6 +250,13 @@ export const getPublicationDatePer = async (
         },
       },
     },
+    {
+      $group: {
+        _id: { ...getGroupingByTimeSplit(timeSplit), pubYear: '$pubYear' },
+        count: { $sum: 1 },
+        year: { $first: '$pubYear' },
+      },
+    },
     ...sortByTimeSplit(timeSplit, '_id'),
   ]);
   return res;
