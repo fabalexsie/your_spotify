@@ -23,6 +23,7 @@ import {
   getBestGenresOfHour,
   getLongestListeningSession,
   getPublicationDatePer,
+  getPublicationDateDistribution,
 } from '../database';
 import {
   CollaborativeMode,
@@ -266,6 +267,24 @@ router.get(
 
     try {
       const result = await getPublicationDatePer(user, start, end, timeSplit);
+      return res.status(200).send(result);
+    } catch (e) {
+      logger.error(e);
+      return res.status(500).end();
+    }
+  },
+);
+
+router.get(
+  '/publication_date_distribution',
+  validating(interval, 'query'),
+  isLoggedOrGuest,
+  async (req, res) => {
+    const { user } = req as LoggedRequest;
+    const { start, end } = req.query as TypedPayload<typeof interval>;
+
+    try {
+      const result = await getPublicationDateDistribution(user, start, end);
       return res.status(200).send(result);
     } catch (e) {
       logger.error(e);

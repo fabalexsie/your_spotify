@@ -257,7 +257,73 @@ export const getPublicationDatePer = async (
         year: { $first: '$pubYear' },
       },
     },
+    {
+      $match: {
+        year: { $ne: 0 },
+      },
+    },
     ...sortByTimeSplit(timeSplit, '_id'),
+  ]);
+  return res;
+};
+
+export const getPublicationDateDistribution = async (
+  user: User,
+  start: Date,
+  end: Date,
+) => {
+  const res = await InfosModel.aggregate([
+    { $match: basicMatch(user._id, start, end) },
+    {
+      $project: {
+        ...getGroupByDateProjection(user.settings.timezone),
+        id: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'tracks',
+        localField: 'id',
+        foreignField: 'id',
+        as: 'track',
+      },
+    },
+    { $unwind: '$track' },
+    {
+      $lookup: {
+        from: 'albums',
+        localField: 'track.album',
+        foreignField: 'id',
+        as: 'album',
+      },
+    },
+    { $unwind: '$album' },
+    {
+      $set: {
+        pubYear: {
+          $sum: {
+            $toInt: {
+              $arrayElemAt: [{ $split: ['$album.release_date', '-'] }, 0],
+            },
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { pubYear: '$pubYear' },
+        count: { $sum: 1 },
+        year: { $first: '$pubYear' },
+      },
+    },
+    {
+      $match: {
+        year: { $ne: 0 },
+      },
+    },
+    {
+      $sort: { year: 1 },
+    },
   ]);
   return res;
 };
