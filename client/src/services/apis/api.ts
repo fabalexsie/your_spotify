@@ -230,7 +230,7 @@ export const api = {
       timeSplit,
     }),
   publicationDatePer: (start: Date, end: Date, timeSplit: Timesplit) =>
-    get<{ year: number; _id: DateId | null; count: number }[]>(
+    get<{ pubYear: number; _id: DateId | null; count: number }[]>(
       '/spotify/publication_date_per',
       {
         start,

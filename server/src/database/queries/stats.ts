@@ -254,12 +254,12 @@ export const getPublicationDatePer = async (
       $group: {
         _id: { ...getGroupingByTimeSplit(timeSplit), pubYear: '$pubYear' },
         count: { $sum: 1 },
-        year: { $first: '$pubYear' },
+        pubYear: { $first: '$pubYear' },
       },
     },
     {
       $match: {
-        year: { $ne: 0 },
+        pubYear: { $ne: 0 },
       },
     },
     ...sortByTimeSplit(timeSplit, '_id'),

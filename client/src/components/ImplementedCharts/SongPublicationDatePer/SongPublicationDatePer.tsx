@@ -27,12 +27,13 @@ export default function SongPublicationDatePer({
   const data = buildXYZData(
     result?.map(r => ({
       x: r._id as DateId,
-      y: r.year,
+      y: r.pubYear,
       z: r.count,
     })) ?? [],
     interval.start,
     interval.end,
   );
+  console.log(data);
 
   const formatX = useFormatXAxis(data);
   const formatY = useCallback((value: number) => `${value}`, []);
