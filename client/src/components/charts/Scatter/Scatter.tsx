@@ -35,6 +35,8 @@ export default function Scatter({
           type="number"
           dataKey="x"
           tickFormatter={xFormat}
+          domain={['dataMin', 'dataMax']}
+          scale="linear"
           style={{ fontWeight: 'bold' }}
         />
         <YAxis
@@ -42,7 +44,8 @@ export default function Scatter({
           dataKey="y"
           tickFormatter={yFormat}
           width={40}
-          domain={['dataMin - 2', 'dataMax']}
+          scale="linear"
+          domain={['dataMin', 'dataMax']}
         />
         <ZAxis dataKey="z" range={[10, 100]} />
         <RScatter data={data} fill="var(--primary)" />
