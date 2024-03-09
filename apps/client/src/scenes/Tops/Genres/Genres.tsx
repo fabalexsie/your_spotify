@@ -36,7 +36,7 @@ export default function Genres() {
               <GenreHeader />
               {items.map(item => (
                 <Genre
-                  key={item.genre._id}
+                  key={item.genre.name}
                   genre={item.genre}
                   count={item.count}
                   totalCount={item.total_count}

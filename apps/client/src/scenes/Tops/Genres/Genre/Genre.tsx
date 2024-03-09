@@ -97,10 +97,10 @@ export default function Genre({
             className="otext"
             title={genre.artists.map(a => a.name).join(', ')}>
             {genre.artists.map((artist, i) => (
-              <>
+              <span key={artist.name}>
                 <InlineArtist artist={artist} />
                 {i + 1 < genre.artists.length && ', '}
-              </>
+              </span>
             ))}
           </Text>
         ),
