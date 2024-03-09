@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  server:
+    container_name: server
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./apps/server/src/:/app/apps/server/src/
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    ports:
+      - "8090:8080"
+    env_file:
+      - dev.env
+    environment:
+      LOG_LEVEL: debug
+      API_ENDPOINT: http://localhost:8090 # This MUST be included as a valid URL in the spotify dashboard
+      CLIENT_ENDPOINT: http://localhost:3000
+      #SPOTIFY_PUBLIC: are set in the .env file
+      #SPOTIFY_SECRET: are set in the .env file
+      CORS: http://localhost:3000
+      # OFFLINE_DEV_ID: true
+
+  mongo:
+    image: mongo:6
+    logging:
+      driver: none
+    volumes:
+      - your_spotify_db:/data/db
+    ports:
+      - "27017:27017"
+
+  web:
+    container_name: web
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./apps/client/src:/app/apps/client/src/
+      - ./apps/client/public:/app/apps/client/public/
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      API_ENDPOINT: http://localhost:8090
+
+volumes:
+  your_spotify_db:
+    external: true
