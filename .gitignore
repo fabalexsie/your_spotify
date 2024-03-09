@@ -113,3 +113,5 @@ client/public/variables.js
 
 # VSCode files
 .vscode/
+
+db_data

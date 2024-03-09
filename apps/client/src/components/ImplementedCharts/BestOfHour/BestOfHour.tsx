@@ -1,25 +1,25 @@
-import { MenuItem, Select } from "@mui/material";
-import { useCallback, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { api } from "../../../services/apis/api";
-import { useAPI } from "../../../services/hooks/hooks";
-import { selectRawIntervalDetail } from "../../../services/redux/modules/user/selector";
-import { UnboxPromise } from "../../../services/types";
-import ChartCard from "../../ChartCard";
-import StackedBar from "../../charts/StackedBar";
-import { StackedBarProps } from "../../charts/StackedBar/StackedBar";
-import Tooltip from "../../Tooltip";
-import { TitleFormatter, ValueFormatter } from "../../Tooltip/Tooltip";
-import LoadingImplementedChart from "../LoadingImplementedChart";
-import { ImplementedChartProps } from "../types";
+import { MenuItem, Select } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { api } from '../../../services/apis/api';
+import { useAPI } from '../../../services/hooks/hooks';
+import { selectRawIntervalDetail } from '../../../services/redux/modules/user/selector';
+import { UnboxPromise } from '../../../services/types';
+import ChartCard from '../../ChartCard';
+import StackedBar from '../../charts/StackedBar';
+import { StackedBarProps } from '../../charts/StackedBar/StackedBar';
+import Tooltip from '../../Tooltip';
+import { TitleFormatter, ValueFormatter } from '../../Tooltip/Tooltip';
+import LoadingImplementedChart from '../LoadingImplementedChart';
+import { ImplementedChartProps } from '../types';
 
 interface BestOfHourProps extends ImplementedChartProps {}
 
 enum Element {
-  ARTIST = "artists",
-  ALBUM = "albums",
-  TRACK = "tracks",
-  GENRE = "genres",
+  ARTIST = 'artists',
+  ALBUM = 'albums',
+  TRACK = 'tracks',
+  GENRE = 'genres',
 }
 
 const elementToCall = {
@@ -32,29 +32,17 @@ const elementToCall = {
 function getElementName(
   result: UnboxPromise<
     ReturnType<(typeof elementToCall)[Element]>
-  >["data"][number],
+  >['data'][number],
   id: string,
 ) {
-  if ("tracks" in result) {
-    return result.tracks.find(t => t.track.id === id)?.track.name;
-  }
-  if ("albums" in result) {
-    return result.albums.find(t => t.album.id === id)?.album.name;
-  }
-  if ("artists" in result) {
-    return result.artists.find(t => t.artist.id === id)?.artist.name;
-  }
-  if ("genres" in result) {
-    return result.genres.find(t => t.genre.id === id)?.genre.name;
-  }
-  return "";
+  return result.full_items[id]?.name;
 }
 
 function getElementData(
-  result: UnboxPromise<ReturnType<(typeof elementToCall)[Element]>>["data"],
+  result: UnboxPromise<ReturnType<(typeof elementToCall)[Element]>>['data'],
   index: number,
 ) {
-  const foundIndex = result.findIndex(r => r._id === index);
+  const foundIndex = result.findIndex(r => r.hour === index);
   if (foundIndex === -1) {
     return { x: index };
   }
@@ -66,43 +54,13 @@ function getElementData(
 
   const { total } = found;
 
-  if ("tracks" in found) {
-    return found.tracks.reduce<StackedBarProps["data"][number]>(
-      (acc, curr) => {
-        acc[curr.track.id] = Math.floor((curr.count / total) * 1000) / 10;
-        return acc;
-      },
-      { x: index },
-    );
-  }
-  if ("albums" in found) {
-    return found.albums.reduce<StackedBarProps["data"][number]>(
-      (acc, curr) => {
-        acc[curr.album.id] = Math.floor((curr.count / total) * 1000) / 10;
-        return acc;
-      },
-      { x: index },
-    );
-  }
-  if ("artists" in found) {
-    return found.artists.reduce<StackedBarProps["data"][number]>(
-      (acc, curr) => {
-        acc[curr.artist.id] = Math.floor((curr.count / total) * 1000) / 10;
-        return acc;
-      },
-      { x: index },
-    );
-  }
-  if ('genres' in found) {
-    return found.genres.reduce<StackedBarProps['data'][number]>(
-      (acc, curr) => {
-        acc[curr.genre.id] = Math.floor((curr.count / total) * 1000) / 10;
-        return acc;
-      },
-      { x: index },
-    );
-  }
-  return { x: index };
+  return found.items.reduce<StackedBarProps['data'][number]>(
+    (acc, curr) => {
+      acc[curr.itemId] = Math.floor((curr.total / total) * 1000) / 10;
+      return acc;
+    },
+    { x: index },
+  );
 }
 
 function formatX(value: any) {
@@ -130,7 +88,7 @@ export default function BestOfHour({ className }: BestOfHourProps) {
 
   const tooltipValue = useCallback<ValueFormatter<typeof data>>(
     (payload, value, root) => {
-      const foundIndex = result?.findIndex(r => r._id === payload.x);
+      const foundIndex = result?.findIndex(r => r.hour === payload.x);
       if (!result || foundIndex === undefined || foundIndex === -1) {
         return null;
       }

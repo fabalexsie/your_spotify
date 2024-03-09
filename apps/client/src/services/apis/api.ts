@@ -212,7 +212,7 @@ export const api = {
       id,
     }),
   addToQueue: (id: string) =>
-    axios.post('/spotify/addtoqueue', {
+    axios.post("/spotify/addtoqueue", {
       id,
     }),
   getTracks: (start: Date, end: Date, number: number, offset: number) =>
@@ -262,7 +262,7 @@ export const api = {
     }),
   publicationDatePer: (start: Date, end: Date, timeSplit: Timesplit) =>
     get<{ pubYear: number; _id: DateId | null; count: number }[]>(
-      '/spotify/publication_date_per',
+      "/spotify/publication_date_per",
       {
         start,
         end,
@@ -271,7 +271,7 @@ export const api = {
     ),
   publicationDateDistribution: (start: Date, end: Date) =>
     get<{ pubYear: number; _id: DateId | null; count: number }[]>(
-      '/spotify/publication_date',
+      "/spotify/publication_date",
       {
         start,
         end,
@@ -351,9 +351,9 @@ export const api = {
       start,
       end,
     }),
-  getAlbums: (ids: string[]) => get<Album[]>(`/album/${ids.join(',')}`),
+  getAlbums: (ids: string[]) => get<Album[]>(`/album/${ids.join(",")}`),
   getAlbumStats: (id: string) =>
-    get<AlbumStatsResponse | { code: 'NEVER_LISTENED' }>(`/album/${id}/stats`),
+    get<AlbumStatsResponse | { code: "NEVER_LISTENED" }>(`/album/${id}/stats`),
   getAlbumRank: (id: string) =>
     get<{
       index: number;
@@ -364,7 +364,7 @@ export const api = {
         count: number;
       }[];
     }>(`/album/${id}/rank`),
-  getArtists: (ids: string[]) => get<Artist[]>(`/artist/${ids.join(',')}`),
+  getArtists: (ids: string[]) => get<Artist[]>(`/artist/${ids.join(",")}`),
   getArtistStats: (id: string) =>
     get<ArtistStatsResponse | { code: "NEVER_LISTENED" }>(
       `/artist/${id}/stats`,
@@ -425,7 +425,7 @@ export const api = {
         total_duration_ms: number;
         genre: Genre;
       }[]
-    >('/spotify/top/genres', {
+    >("/spotify/top/genres", {
       start,
       end,
       nb,
@@ -526,33 +526,37 @@ export const api = {
   getBestSongsOfHour: (start: Date, end: Date) =>
     get<
       {
-        _id: number;
+        hour: number;
         total: number;
-        tracks: { count: number; track: Track; artist: Artist }[];
+        items: { itemId: string; total: number }[];
+        full_items: Record<string, Track>;
       }[]
     >("/spotify/top/hour-repartition/songs", { start, end }),
   getBestGenresOfHour: (start: Date, end: Date) =>
     get<
       {
-        _id: number;
+        hour: number;
         total: number;
-        genres: { count: number; genre: { id: string; name: string } }[];
+        items: { itemId: string; total: number }[];
+        full_items: Record<string, Genre>;
       }[]
     >("/spotify/top/hour-repartition/genres", { start, end }),
   getBestAlbumsOfHour: (start: Date, end: Date) =>
     get<
       {
-        _id: number;
+        hour: number;
         total: number;
-        albums: { count: number; album: Album; artist: Artist }[];
+        items: { itemId: string; total: number }[];
+        full_items: Record<string, Album>;
       }[]
     >("/spotify/top/hour-repartition/albums", { start, end }),
   getBestArtistsOfHour: (start: Date, end: Date) =>
     get<
       {
-        _id: number;
+        hour: number;
         total: number;
-        artists: { count: number; artist: Artist }[];
+        items: { itemId: string; total: number }[];
+        full_items: Record<string, Artist>;
       }[]
     >("/spotify/top/hour-repartition/artists", { start, end }),
   getPlaylists: () => get<Playlist[]>("/spotify/playlists"),
@@ -581,10 +585,11 @@ export const api = {
     get<
       {
         sessionLength: number;
+        full_tracks: Record<string, Track>;
         distanceToLast: {
           distance: {
             subtract: number;
-            info: TrackInfo & { track: Track };
+            info: TrackInfo;
           }[];
         };
       }[]
