@@ -78,7 +78,7 @@ export default function Genre({
         ...genreGrid.cover,
         node: (
           <img
-            alt="Artist cover"
+            alt={genre.name[0] || ''}
             src={genreToImageAsBase64(genre.name)}
             className={s.cover}
             height={48}
