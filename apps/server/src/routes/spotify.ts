@@ -28,7 +28,7 @@ import {
   getCollaborativeBestArtists,
   getCollaborativeBestSongs,
 } from "../database/queries/collaborative";
-import { dateToDaysMonthsYear, intervalToDisplay } from "../tools/date";
+import { DateFormatter, intervalToDisplay } from "../tools/date";
 import { logger } from "../tools/logger";
 import {
   isLoggedOrGuest,
@@ -788,15 +788,14 @@ router.post(
         spotifyIds = items.map(item => item.track.id);
         if (!playlistName) {
           playlistName = `Top songs • ${intervalToDisplay(
+            user.settings.dateFormat,
             intervalData.start,
             intervalData.end,
           )}`;
         }
       } else if (body.type === "affinity") {
         if (!playlistName) {
-          playlistName = `Your Spotify Playlist • ${dateToDaysMonthsYear(
-            new Date(),
-          )}`;
+          playlistName = `Your Spotify Playlist • ${DateFormatter.toDayMonthYear(user.settings.dateFormat, new Date())}`;
         }
         const affinity = await getCollaborativeBestSongs(
           body.userIds,
@@ -808,9 +807,7 @@ router.post(
         spotifyIds = affinity.map(item => item.track.id);
       } else {
         if (!playlistName) {
-          playlistName = `Your Spotify Playlist • ${dateToDaysMonthsYear(
-            new Date(),
-          )}`;
+          playlistName = `Your Spotify Playlist • ${DateFormatter.toDayMonthYear(user.settings.dateFormat, new Date())}`;
         }
         spotifyIds = [body.songId];
       }

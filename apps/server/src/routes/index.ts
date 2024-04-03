@@ -55,6 +55,11 @@ const settingsSchema = z.object({
     .nullable()
     .transform(e => e ?? undefined)
     .optional(),
+  dateFormat: z
+    .string()
+    .nullable()
+    .transform(e => e ?? undefined)
+    .optional(),
 });
 
 router.post(
@@ -191,7 +196,7 @@ router.put("/rename", validating(rename), logged, async (req, res) => {
   }
 });
 
-router.get("/version", logged, async (_, res) => {
+router.get("/version", async (_, res) => {
   if (getWithDefault("NODE_ENV", "development") === "development") {
     return res.status(200).send({ update: false, version: "0.1.2" });
   }
