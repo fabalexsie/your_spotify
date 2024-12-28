@@ -2,5 +2,5 @@
 
 #docker compose down
 git pull
-./build.sh
-docker compose up --detach
+docker compose up --build --detach
+# docker-compose-prod.yml is called docker-compose.yml in production server
