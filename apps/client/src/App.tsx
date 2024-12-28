@@ -20,7 +20,7 @@ import CollaborativeSongs from "./scenes/Collaborative/Affinity/Songs";
 import CollaborativeAlbums from "./scenes/Collaborative/Affinity/Albums";
 import CollaborativeArtists from "./scenes/Collaborative/Affinity/Artists";
 import "./App.css";
-import RegistrationsDisabled from "./scenes/RegistrationsDisabled";
+import RegistrationsDisabled from "./scenes/Error/RegistrationsDisabled";
 import Affinity from "./scenes/Collaborative/Affinity";
 import { useTheme } from "./services/theme";
 import { selectDarkMode } from "./services/redux/modules/user/selector";
@@ -30,6 +30,7 @@ import TrackStats from "./scenes/TrackStats";
 import LongestSessions from "./scenes/LongestSessions";
 import AlbumStats from "./scenes/AlbumStats";
 import Benchmarks from "./scenes/Benchmarks";
+import ApiEndpointSetToFronted from "./scenes/Error/ApiEndpointSetToFronted";
 
 function App() {
   const dark = useSelector(selectDarkMode);
@@ -82,6 +83,10 @@ function App() {
               <Route
                 path="/registrations-disabled"
                 element={<RegistrationsDisabled />}
+              />
+              <Route
+                path="/oauth/spotify" // Error page when someone accidentally configures their API_ENDPOINT to point to the frontend instead of the backend
+                element={<ApiEndpointSetToFronted />}
               />
               <Route
                 path="/top/songs"

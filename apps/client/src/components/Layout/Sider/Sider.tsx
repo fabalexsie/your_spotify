@@ -1,26 +1,27 @@
-import { useCallback, useContext } from "react";
-import clsx from "clsx";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { SystemUpdateAlt as UpdateIcon } from "@mui/icons-material";
+import { useCallback, useContext } from 'react';
+import clsx from 'clsx';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { SystemUpdateAlt as UpdateIcon } from '@mui/icons-material';
 
-import { Tooltip } from "@mui/material";
-import { useShareLink } from "../../../services/hooks/hooks";
-import { alertMessage } from "../../../services/redux/modules/message/reducer";
-import { selectUser } from "../../../services/redux/modules/user/selector";
-import { useAppDispatch } from "../../../services/redux/tools";
-import { LayoutContext } from "../LayoutContext";
-import SiderSearch from "../../SiderSearch";
-import { Album, Artist, TrackWithFullAlbum } from "../../../services/types";
+import { Tooltip } from '@mui/material';
+import { useShareLink } from '../../../services/hooks/hooks';
+import { alertMessage } from '../../../services/redux/modules/message/reducer';
+import { selectUser } from '../../../services/redux/modules/user/selector';
+import { useAppDispatch } from '../../../services/redux/tools';
+import { LayoutContext } from '../LayoutContext';
+import SiderSearch from '../../SiderSearch';
+import { Album, Artist, TrackWithFullAlbum } from '../../../services/types';
 import {
   selectUpdateAvailable,
   selectVersion,
-} from "../../../services/redux/modules/settings/selector";
-import Text from "../../Text";
-import SiderCategory from "./SiderCategory/SiderCategory";
-import { links } from "./types";
-import SiderTitle from "./SiderTitle";
-import s from "./index.module.css";
+} from '../../../services/redux/modules/settings/selector';
+import Text from '../../Text';
+import { useNavigate } from '../../../services/hooks/useNavigate';
+import SiderCategory from './SiderCategory/SiderCategory';
+import { links } from './types';
+import SiderTitle from './SiderTitle';
+import s from './index.module.css';
 
 interface SiderProps {
   className?: string;
@@ -62,17 +63,17 @@ export default function Sider({ className, isDrawer }: SiderProps) {
     if (!user?.publicToken) {
       dispatch(
         alertMessage({
-          level: "error",
+          level: 'error',
           message:
-            "No public token generated, go to the settings page to generate one",
+            'No public token generated, go to the settings page to generate one',
         }),
       );
       return;
     }
     dispatch(
       alertMessage({
-        level: "info",
-        message: "Copied current page to clipboard with public token",
+        level: 'info',
+        message: 'Copied current page to clipboard with public token',
       }),
     );
   }, [dispatch, user?.publicToken]);
@@ -103,7 +104,7 @@ export default function Sider({ className, isDrawer }: SiderProps) {
             user={user}
             pathname={location.pathname}
             onCopy={copyCurrentPage}
-            toCopy={toCopy ?? ""}
+            toCopy={toCopy ?? ''}
             category={category}
           />
         ))}

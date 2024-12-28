@@ -1,6 +1,6 @@
-import { Album, Artist, SpotifyImage } from "./types";
+import { Album, Artist, SpotifyImage } from './types';
 
-const NO_DATA_IMAGE = "/no_data_faded.png";
+const NO_DATA_IMAGE = '/no_data_faded.png';
 const PIXEL_RATIO = window.devicePixelRatio ?? 1;
 
 export const getImage = (value: Artist | Album | undefined) =>
@@ -17,6 +17,9 @@ export function getAtLeastImage(images: SpotifyImage[], size: number) {
     NO_DATA_IMAGE
   );
 }
+
+// @ts-ignore
+export const getApiEndpoint = () => window.API_ENDPOINT as string;
 
 export const getSpotifyLogUrl = (readOnlyPermission: boolean = false) =>
   // @ts-ignore
