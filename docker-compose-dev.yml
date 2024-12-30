@@ -28,6 +28,7 @@ services:
 
   mongo:
     image: mongo:6
+    restart: unless-stopped
     logging:
       driver: none
     volumes:
@@ -37,7 +38,7 @@ services:
 
   web:
     container_name: web
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.client
