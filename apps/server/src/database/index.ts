@@ -8,6 +8,7 @@ export * from "./queries/user";
 export * from "./queries/global";
 export * from "./queries/artist";
 export * from "./queries/track";
+export * from "./queries/genre";
 
 const TRIES = 10;
 const WAIT_MS = 30_000;

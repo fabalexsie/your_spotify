@@ -13,6 +13,7 @@ import { router as albumRouter } from "./routes/album";
 import { router as importRouter } from "./routes/importer";
 import { router as trackRouter } from "./routes/track";
 import { router as searchRouter } from "./routes/search";
+import { router as genreRouter } from "./routes/genre";
 import { get } from "./tools/env";
 import { LogLevelAccepts } from "./tools/logger";
 
@@ -68,6 +69,7 @@ app.use("/global", globalRouter);
 app.use("/artist", artistRouter);
 app.use("/album", albumRouter);
 app.use("/track", trackRouter);
+app.use("/genre", genreRouter);
 app.use("/search", searchRouter);
 app.use("/", importRouter);
 

@@ -35,7 +35,7 @@ axios.interceptors.response.use(
       window.location.pathname = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // Adds latency to requests without having to use chrome latency
@@ -197,6 +197,10 @@ export type AlbumStatsResponse = {
   total: {
     count: number;
   };
+};
+
+export type GenreStatsResponse = {
+  genre: Genre;
 };
 
 export const api = {
@@ -390,6 +394,10 @@ export const api = {
         count: number;
       }[];
     }>(`/artist/${id}/rank`),
+  getGenreStats: (genreName: string) =>
+    get<GenreStatsResponse | { code: "NEVER_LISTENED" }>(
+      `/genre/${genreName}/stats`,
+    ),
   search: (str: string) =>
     get<{ artists: Artist[]; tracks: TrackWithFullAlbum[]; albums: Album[] }>(
       `/search/${str}`,
