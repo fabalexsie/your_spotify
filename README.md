@@ -11,6 +11,10 @@ Some more statistics with a few caveats, as the data used is not perfect, as it 
   - Scatter chart: x-axis listened timeline, y-axis publication year
   - Bar chart: x-axis year of publication, y-axis number of songs
 
+<p align='center'>
+  <img width="100%" src="https://github.com/user-attachments/assets/1a7dee0e-8929-43af-829d-e1be3ff0a8c7">
+</p>
+
 ---
 
 # <center>### Original README below ###</center>
