@@ -1,3 +1,20 @@
+# Changes to the original project by [Yooooomi/your_spotify](https://github.com/Yooooomi/your_spotify)
+
+Some more statistics with a few caveats, as the data used is not perfect, as it is not directly linked to the songs, but to the artists and albums:
+
+- "Top genres" section
+  - Spotify only tells the genres per artist and not per song. So it is assumed that each song matches all genres associated with the artist.
+- Subpage for each genre
+  - Shows all artists belonging to the genre
+  - (TODO: statistics for the genre how often it is listened to)
+- Two "Song publication date" charts (based on the album release date)
+  - Scatter chart: x-axis listened timeline, y-axis publication year
+  - Bar chart: x-axis year of publication, y-axis number of songs
+
+---
+
+# <center>### Original README below ###</center>
+
 ![Client CI](https://github.com/Yooooomi/your_spotify/workflows/Client%20CI/badge.svg)
 ![Server CI](https://github.com/Yooooomi/your_spotify/workflows/Server%20CI/badge.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=BLAPT49PK9A8G)
@@ -83,27 +100,27 @@ You can follow the instructions [here](https://github.com/Yooooomi/your_spotify/
 
 ## Environment
 
-| Key | Default value (if any) | Description |
-| :--- | :--- | :--- |
-| CLIENT_ENDPOINT       | REQUIRED | The endpoint of your web application |
-| API_ENDPOINT          | REQUIRED | The endpoint of your server |
-| SPOTIFY_PUBLIC        | REQUIRED | The public key of your Spotify application (cf [Creating the Spotify Application](#creating-the-spotify-application)) |
-| SPOTIFY_SECRET        | REQUIRED | The secret key of your Spotify application (cf [Creating the Spotify Application](#creating-the-spotify-application)) |
-| TIMEZONE              | Europe/Paris | The timezone of your stats, only affects read requests since data is saved with UTC time |
-| MONGO_ENDPOINT        | mongodb://mongo:27017/your_spotify | The endpoint of the Mongo database, where **mongo** is the name of your service in the compose file |
-| LOG_LEVEL             | info | The log level, debug is useful if you encouter any bugs |
-| CORS                  | _not defined_ | List of comma-separated origin allowed (defaults to CLIENT_ENDPOINT) |
-| COOKIE_VALIDITY_MS    | 1h | Validity time of the authentication cookie, following [this pattern](https://github.com/vercel/ms) |
-| MAX_IMPORT_CACHE_SIZE | Infinite | The maximum element in the cache when importing data from an outside source, more cache means less requests to Spotify, resulting in faster imports |
-| MONGO_NO_ADMIN_RIGHTS | false | Do not ask for admin right on the Mongo database |
-| PORT                  | 8080 | The port of the server, **do not** modify if you're using docker |
-| FRAME_ANCESTORS       | _not defined_ | Sites allowed to frame the website, comma separated list of URLs (`i-want-a-security-vulnerability-and-want-to-allow-all-frame-ancestors` to allow every website) |
+| Key                   | Default value (if any)             | Description                                                                                                                                                       |
+| :-------------------- | :--------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CLIENT_ENDPOINT       | REQUIRED                           | The endpoint of your web application                                                                                                                              |
+| API_ENDPOINT          | REQUIRED                           | The endpoint of your server                                                                                                                                       |
+| SPOTIFY_PUBLIC        | REQUIRED                           | The public key of your Spotify application (cf [Creating the Spotify Application](#creating-the-spotify-application))                                             |
+| SPOTIFY_SECRET        | REQUIRED                           | The secret key of your Spotify application (cf [Creating the Spotify Application](#creating-the-spotify-application))                                             |
+| TIMEZONE              | Europe/Paris                       | The timezone of your stats, only affects read requests since data is saved with UTC time                                                                          |
+| MONGO_ENDPOINT        | mongodb://mongo:27017/your_spotify | The endpoint of the Mongo database, where **mongo** is the name of your service in the compose file                                                               |
+| LOG_LEVEL             | info                               | The log level, debug is useful if you encouter any bugs                                                                                                           |
+| CORS                  | _not defined_                      | List of comma-separated origin allowed (defaults to CLIENT_ENDPOINT)                                                                                              |
+| COOKIE_VALIDITY_MS    | 1h                                 | Validity time of the authentication cookie, following [this pattern](https://github.com/vercel/ms)                                                                |
+| MAX_IMPORT_CACHE_SIZE | Infinite                           | The maximum element in the cache when importing data from an outside source, more cache means less requests to Spotify, resulting in faster imports               |
+| MONGO_NO_ADMIN_RIGHTS | false                              | Do not ask for admin right on the Mongo database                                                                                                                  |
+| PORT                  | 8080                               | The port of the server, **do not** modify if you're using docker                                                                                                  |
+| FRAME_ANCESTORS       | _not defined_                      | Sites allowed to frame the website, comma separated list of URLs (`i-want-a-security-vulnerability-and-want-to-allow-all-frame-ancestors` to allow every website) |
 
 ## CORS
 
 - Not defining it will default to authorize only the `CLIENT_ENDPOINT` origin.
 - `origin1,origin2` will allow `origin1` and `origin2`.
-> If you really want to allow every origin no matter what, you can set the `CORS` value to `i-want-a-security-vulnerability-and-want-to-allow-all-origins`.
+  > If you really want to allow every origin no matter what, you can set the `CORS` value to `i-want-a-security-vulnerability-and-want-to-allow-all-origins`.
 
 # Creating the Spotify Application
 
@@ -113,7 +130,9 @@ To do so, you need to create a **Spotify application** [here](https://developer.
 1. Click on **Create app**.
 2. Fill out all the information.
 3. Set the redirect URI, corresponding to your **server** location on the internet (or your local network) adding the suffix **/oauth/spotify/callback** (**/api/oauth/spotify/callback** if using the [linuxserver](https://github.com/linuxserver/docker-your_spotify) image).
+
 - i.e: `http://localhost:8080/oauth/spotify/callback` or `http://home.mydomain.com/your_spotify_backend/oauth/spotify/callback`
+
 4. Check **Web API**
 5. Check **I understand and agree**
 6. Hit **Settings** at the top right corner
@@ -155,6 +174,7 @@ The import process uses cache to limit requests to the Spotify API. By default, 
 ## Troubleshoot
 
 An import can fail:
+
 - If the server reboots.
 - If a request fails 10 times in a row.
 
