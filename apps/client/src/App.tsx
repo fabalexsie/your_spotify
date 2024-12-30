@@ -25,7 +25,8 @@ import Affinity from "./scenes/Collaborative/Affinity";
 import { useTheme } from "./services/theme";
 import { selectDarkMode } from "./services/redux/modules/user/selector";
 import PlaylistDialog from "./components/PlaylistDialog";
-import Genres from './scenes/Tops/Genres';
+import Genres from "./scenes/Tops/Genres";
+import GenreStats from "./scenes/GenreStats";
 import TrackStats from "./scenes/TrackStats";
 import LongestSessions from "./scenes/LongestSessions";
 import AlbumStats from "./scenes/AlbumStats";
@@ -173,6 +174,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <TrackStats />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/genre/:genrename"
+                element={
+                  <PrivateRoute>
+                    <GenreStats />
                   </PrivateRoute>
                 }
               />

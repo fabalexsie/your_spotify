@@ -1,12 +1,13 @@
-import { useMemo } from 'react';
-import s from './index.module.css';
-import { msToMinutesAndSeconds } from '../../../../services/stats';
-import { Genre as GenreType } from '../../../../services/types';
-import Text from '../../../../components/Text';
-import InlineArtist from '../../../../components/InlineArtist';
-import { useMobile } from '../../../../services/hooks/hooks';
-import { useGenreGrid } from './GenreGrid';
-import { ColumnDescription, GridRowWrapper } from '../../../../components/Grid';
+import { useMemo } from "react";
+import s from "./index.module.css";
+import { msToMinutesAndSeconds } from "../../../../services/stats";
+import { Genre as GenreType } from "../../../../services/types";
+import Text from "../../../../components/Text";
+import InlineArtist from "../../../../components/InlineArtist";
+import { useMobile } from "../../../../services/hooks/hooks";
+import { useGenreGrid } from "./GenreGrid";
+import { ColumnDescription, GridRowWrapper } from "../../../../components/Grid";
+import InlineGenre from "../../../../components/InlineGenre";
 
 interface GenreProps {
   genre: GenreType;
@@ -34,8 +35,8 @@ function genreToImageAsBase64(genre: string) {
   const color = `rgb(${r},${g},${b})`;
 
   // Create canvas with genre letter on top of a colored rectangle
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
   if (context) {
     // Set canvas dimensions
     const width = 48; // commonUnits.cover
@@ -48,18 +49,18 @@ function genreToImageAsBase64(genre: string) {
     context.fillRect(0, 0, width, height);
 
     // Draw letter on top of the rectangle
-    context.font = '30px Arial';
-    context.fillStyle = 'white';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText((genre[0] || '').toUpperCase(), width / 2, height / 2);
+    context.font = "30px Arial";
+    context.fillStyle = "white";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText((genre[0] || "").toUpperCase(), width / 2, height / 2);
 
     // Convert canvas to image data URL
     const imageDataURL = canvas.toDataURL();
 
     return imageDataURL;
   }
-  return '/no_data_faded.png'; // from tools.ts
+  return "/no_data_faded.png"; // from tools.ts
 }
 
 export default function Genre({
@@ -78,7 +79,7 @@ export default function Genre({
         ...genreGrid.cover,
         node: (
           <img
-            alt={genre.name[0] || ''}
+            alt={genre.name[0] || ""}
             src={genreToImageAsBase64(genre.name)}
             className={s.cover}
             height={48}
@@ -88,18 +89,22 @@ export default function Genre({
       },
       {
         ...genreGrid.title,
-        node: <Text className="otext">{genre.name}</Text>,
+        node: (
+          <Text className="otext">
+            <InlineGenre genreName={genre.name} />
+          </Text>
+        ), // custom page for each genre
       },
       {
         ...genreGrid.artists,
         node: !isTablet && (
           <Text
             className="otext"
-            title={genre.artists.map(a => a.name).join(', ')}>
+            title={genre.artists.map(a => a.name).join(", ")}>
             {genre.artists.map((artist, i) => (
               <span key={artist.name}>
                 <InlineArtist artist={artist} />
-                {i + 1 < genre.artists.length && ', '}
+                {i + 1 < genre.artists.length && ", "}
               </span>
             ))}
           </Text>
@@ -112,7 +117,7 @@ export default function Genre({
             {count.toFixed(1)}
             {!isMobile && (
               <>
-                {' '}
+                {" "}
                 <Text>({Math.floor((count / totalCount) * 10000) / 100})%</Text>
               </>
             )}
@@ -126,7 +131,7 @@ export default function Genre({
             {msToMinutesAndSeconds(duration)}
             {!isMobile && (
               <>
-                {' '}
+                {" "}
                 <Text>
                   ({Math.floor((duration / totalDuration) * 10000) / 100}%)
                 </Text>

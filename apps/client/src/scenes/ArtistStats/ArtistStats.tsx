@@ -16,6 +16,7 @@ import FirstAndLast from "./FirstAndLast";
 import ArtistRank from "./ArtistRank/ArtistRank";
 import DayRepartition from "./DayRepartition";
 import s from "./index.module.css";
+import InlineGenre from "../../components/InlineGenre";
 
 interface ArtistStatsProps {
   artistId: string;
@@ -50,7 +51,12 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
           />
         }
         title={stats.artist.name}
-        subtitle={stats.artist.genres.join(", ")}
+        subtitle={stats.artist.genres.map((genreName, i) => (
+          <span key={genreName}>
+            <InlineGenre genreName={genreName} />
+            {i + 1 < stats.artist.genres.length && ", "}
+          </span>
+        ))}
         hideInterval
       />
       <div className={s.content}>

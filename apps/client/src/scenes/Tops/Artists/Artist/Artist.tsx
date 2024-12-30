@@ -8,6 +8,7 @@ import { ColumnDescription, GridRowWrapper } from "../../../../components/Grid";
 import IdealImage from "../../../../components/IdealImage";
 import s from "./index.module.css";
 import { useArtistGrid } from "./ArtistGrid";
+import InlineGenre from "../../../../components/InlineGenre";
 
 interface ArtistProps {
   artist: ArtistType;
@@ -26,8 +27,6 @@ export default function Artist({
 }: ArtistProps) {
   const [isMobile, isTablet] = useMobile();
   const artistGrid = useArtistGrid();
-
-  const genres = artist.genres.join(", ");
 
   const columns = useMemo<ColumnDescription[]>(
     () => [
@@ -55,8 +54,13 @@ export default function Artist({
       {
         ...artistGrid.genres,
         node: !isTablet && (
-          <Text className="otext" title={genres}>
-            {genres}
+          <Text className="otext" title={artist.genres.join(", ")}>
+            {artist.genres.map((genreName, i) => (
+              <span key={genreName}>
+                <InlineGenre genreName={genreName} />
+                {i + 1 < artist.genres.length && ", "}
+              </span>
+            ))}
           </Text>
         ),
       },
@@ -100,7 +104,7 @@ export default function Artist({
       artistGrid.total,
       count,
       duration,
-      genres,
+      artist.genres,
       isMobile,
       isTablet,
       totalCount,
