@@ -14,8 +14,11 @@ import { router as importRouter } from "./routes/importer";
 import { router as trackRouter } from "./routes/track";
 import { router as searchRouter } from "./routes/search";
 import { router as genreRouter } from "./routes/genre";
+import { router as metricsRouter } from "./routes/metrics";
 import { get } from "./tools/env";
-import { LogLevelAccepts } from "./tools/logger";
+import { logger, LogLevelAccepts } from "./tools/logger";
+import { measureRequestDuration } from "./tools/middleware";
+import { ErrorTypeToHTTPCode, YourSpotifyError } from "./tools/errors/error";
 
 const app = express();
 const ALLOW_ALL_CORS =
@@ -27,6 +30,8 @@ let corsValue: string[] | undefined = get("CORS")?.split(",") ?? [
 if (corsValue?.[0] === ALLOW_ALL_CORS) {
   corsValue = undefined;
 }
+
+app.use(measureRequestDuration);
 
 app.use(
   cors({
@@ -72,5 +77,17 @@ app.use("/track", trackRouter);
 app.use("/genre", genreRouter);
 app.use("/search", searchRouter);
 app.use("/", importRouter);
+app.use("/", metricsRouter);
+
+app.use((error: any, req: any, res: any, next: any) => {
+  if (!error) {
+    return next();
+  }
+  logger.error(error);
+  if (error instanceof YourSpotifyError) {
+    return res.status(ErrorTypeToHTTPCode[error.type]).send(error);
+  }
+  return res.status(500).send(error);
+});
 
 export { app };

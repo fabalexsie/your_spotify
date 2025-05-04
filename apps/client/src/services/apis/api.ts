@@ -220,7 +220,7 @@ export const api = {
       status,
     }),
   deleteUser: (id: string) => delet(`/account/${id}`),
-  setGlobalPreferences: (preferences: GlobalPreferences) =>
+  setGlobalPreferences: (preferences: Partial<GlobalPreferences>) =>
     post<GlobalPreferences>("/global/preferences", preferences),
   play: (id: string) =>
     axios.post("/spotify/play", {

@@ -1,10 +1,11 @@
-import { ReactHTML } from "react";
+import { HTMLElementType, JSX } from "react";
 
 export type UnboxPromise<T extends Promise<any>> =
   T extends Promise<infer U> ? U : never;
 
 export interface GlobalPreferences {
   allowRegistrations: boolean;
+  allowAffinity: boolean;
 }
 
 export enum Timesplit {
@@ -148,5 +149,5 @@ export enum CollaborativeMode {
   MINIMA = "minima",
 }
 
-export type HTMLTag = keyof ReactHTML;
+export type HTMLTag = HTMLElementType;
 export type HTMLProps<T extends HTMLTag> = JSX.IntrinsicElements[T];
