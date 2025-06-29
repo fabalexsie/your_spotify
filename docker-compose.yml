@@ -18,7 +18,7 @@ services:
     logging:
       driver: none
     volumes:
-      - your_spotify_db:/data/db
+      - ./your_spotify_mongo_db:/data/db
 
   web:
     container_name: your-spotify-web
@@ -28,7 +28,3 @@ services:
       dockerfile: Dockerfile.client.production
       args:
         NODE_ENV: production
-
-volumes:
-  your_spotify_db:
-    external: true
