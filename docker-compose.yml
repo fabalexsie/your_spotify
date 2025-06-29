@@ -1,0 +1,34 @@
+services:
+  app:
+    container_name: your-spotify-server
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.server.production
+      args:
+        NODE_ENV: production
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    logging:
+      driver: none
+    volumes:
+      - your_spotify_db:/data/db
+
+  web:
+    container_name: your-spotify-web
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.client.production
+      args:
+        NODE_ENV: production
+
+volumes:
+  your_spotify_db:
+    external: true
