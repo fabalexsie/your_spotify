@@ -15,8 +15,6 @@ services:
   mongo:
     image: mongo:6
     restart: unless-stopped
-    logging:
-      driver: none
     volumes:
       - ./your_spotify_mongo_db:/data/db
 
