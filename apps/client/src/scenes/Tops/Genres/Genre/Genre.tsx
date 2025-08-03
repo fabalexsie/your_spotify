@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import s from "./index.module.css";
-import { msToMinutesAndSeconds } from "../../../../services/stats";
+import { msToDuration } from "../../../../services/stats";
 import { Genre as GenreType } from "../../../../services/types";
 import Text from "../../../../components/Text";
 import InlineArtist from "../../../../components/InlineArtist";
@@ -77,7 +77,7 @@ export default function Genre({
         ...genreGrid.total,
         node: (
           <Text className="center">
-            {msToMinutesAndSeconds(duration)}
+            {msToDuration(duration)}
             {!isMobile && (
               <>
                 {" "}
