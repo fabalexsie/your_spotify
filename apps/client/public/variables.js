@@ -1,1 +1,1 @@
-window.API_ENDPOINT = 'http://localhost:8090';
+window.API_ENDPOINT = "http://127.0.0.1:8090";

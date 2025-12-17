@@ -16,6 +16,7 @@ import FirstAndLast from "./FirstAndLast";
 import ArtistRank from "./ArtistRank/ArtistRank";
 import DayRepartition from "./DayRepartition";
 import s from "./index.module.css";
+import { MostListenedTracksContextMenuButton } from "./mostListenedTracksContextMenuButton/mostListenedTracksContextMenuButton";
 import InlineGenre from "../../components/InlineGenre";
 
 interface ArtistStatsProps {
@@ -71,42 +72,48 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
           style={{ marginTop: 0 }}>
           <Grid
             container
-            item
-            xs={12}
-            lg={6}
+            size={{ xs: 12, lg: 6 }}
             spacing={2}
             justifyContent="flex-start"
             alignItems="flex-start">
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TitleCard title="Songs listened">
-                <Text element="strong" className={s.songslistened}>
+                <Text element="strong" size="big">
                   {stats.total.count}
                 </Text>
               </TitleCard>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FirstAndLast
                 firstImages={stats.firstLast.first.track.album.images}
                 lastImages={stats.firstLast.last.track.album.images}
                 firstDate={new Date(stats.firstLast.first.played_at)}
                 lastDate={new Date(stats.firstLast.last.played_at)}
                 firstElement={
-                  <InlineTrack track={stats.firstLast.first.track} />
+                  <InlineTrack
+                    track={stats.firstLast.first.track}
+                    size="normal"
+                  />
                 }
-                lastElement={<InlineTrack track={stats.firstLast.last.track} />}
+                lastElement={
+                  <InlineTrack
+                    track={stats.firstLast.last.track}
+                    size="normal"
+                  />
+                }
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TitleCard
                 title={`Top two months you listened to ${stats.artist.name}`}>
                 {bestPeriod && (
                   <div className={s.bestperiod}>
-                    <Text element="strong">
+                    <Text element="strong" size="normal">
                       {DateFormatter.toMonthStringYear(
                         buildFromDateId(bestPeriod._id),
                       )}
                     </Text>
-                    <Text>
+                    <Text size="normal">
                       {bestPeriod.count} times (
                       {Math.floor((bestPeriod.count / bestPeriod.total) * 100)}%
                       of total time)
@@ -115,12 +122,12 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
                 )}
                 {secondBestPeriod && (
                   <div className={s.bestperiod}>
-                    <Text element="strong">
+                    <Text element="strong" size="normal">
                       {DateFormatter.toMonthStringYear(
                         buildFromDateId(secondBestPeriod._id),
                       )}
                     </Text>
-                    <Text>
+                    <Text size="normal">
                       {secondBestPeriod.count} times (
                       {Math.floor(
                         (secondBestPeriod.count / secondBestPeriod.total) * 100,
@@ -131,19 +138,23 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
                 )}
               </TitleCard>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <DayRepartition
                 stats={stats.dayRepartition}
                 className={s.chart}
               />
             </Grid>
           </Grid>
-          <Grid container item xs={12} lg={6} spacing={2}>
-            <Grid item xs={12}>
-              <TitleCard title="Most listened tracks">
+          <Grid container size={{ xs: 12, lg: 6 }} spacing={2}>
+            <Grid size={{ xs: 12 }}>
+              <TitleCard
+                title="Most listened tracks"
+                right={
+                  <MostListenedTracksContextMenuButton artistId={artistId} />
+                }>
                 {stats.mostListened.map((ml, k) => (
                   <div key={ml.track.id} className={s.ml}>
-                    <Text element="strong" className={s.mlrank}>
+                    <Text element="strong" className={s.mlrank} size="big">
                       #{k + 1}
                     </Text>
                     <ImageTwoLines
@@ -155,18 +166,18 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
                           alt="album cover"
                         />
                       }
-                      first={<InlineTrack track={ml.track} />}
+                      first={<InlineTrack track={ml.track} size="normal" />}
                       second={`${ml.count} times`}
                     />
                   </div>
                 ))}
               </TitleCard>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TitleCard title="Most listened albums">
                 {stats.albumMostListened.map((ml, k) => (
                   <div key={ml.album.id} className={s.ml}>
-                    <Text element="strong" className={s.mlrank}>
+                    <Text element="strong" className={s.mlrank} size="big">
                       #{k + 1}
                     </Text>
                     <ImageTwoLines
@@ -178,7 +189,7 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
                           alt="album cover"
                         />
                       }
-                      first={<InlineAlbum album={ml.album} />}
+                      first={<InlineAlbum album={ml.album} size="normal" />}
                       second={`${ml.count} times`}
                     />
                   </div>
