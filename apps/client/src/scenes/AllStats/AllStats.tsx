@@ -32,10 +32,10 @@ export default function AllStats() {
       />
       <div className={s.content}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={12} lg={6}>
+          <Grid size={{ xs: 12, md: 12, lg: 6 }}>
             <SongPublicationDatePer className={s.chart} />
           </Grid>
-          <Grid item xs={12} md={12} lg={6}>
+          <Grid size={{ xs: 12, md: 12, lg: 6 }}>
             <SongPublicationDateBar className={s.chart} />
           </Grid>
           <Grid size={{ xs: 12, md: 12, lg: 6 }}>
