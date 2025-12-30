@@ -46,9 +46,7 @@ export default function GenreStats({ genreName, stats }: GenreStatsProps) {
           style={{ marginTop: 0 }}>
           <Grid
             container
-            item
-            xs={12}
-            lg={6}
+            size={{ xs: 12, lg: 6 }}
             spacing={2}
             justifyContent="flex-start"
             alignItems="flex-start">
@@ -59,11 +57,12 @@ export default function GenreStats({ genreName, stats }: GenreStatsProps) {
                 </Text>
               </TitleCard>
             </Grid> */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TitleCard title="Artists belonging to this genre">
                 <GridWrapper>
                   {stats.genre.artists.map(artist => (
                     <GridRowWrapper
+                      key={artist.id}
                       columns={[
                         {
                           unit: "48px",
@@ -83,8 +82,8 @@ export default function GenreStats({ genreName, stats }: GenreStatsProps) {
                           unit: "3fr",
                           key: "title",
                           node: (
-                            <Text className="otext">
-                              <InlineArtist artist={artist} />
+                            <Text className="otext" size="normal">
+                              <InlineArtist artist={artist} size="normal" />
                             </Text>
                           ),
                         },

@@ -53,11 +53,7 @@ export default function Artist({
     },
     {
       ...artistGrid.title,
-      node: (
-        <Text size="normal" className="otext">
-          <InlineArtist size="normal" artist={artist} />
-        </Text>
-      ),
+      node: <InlineArtist className="otext" size="normal" artist={artist} />,
     },
     {
       ...artistGrid.genres,

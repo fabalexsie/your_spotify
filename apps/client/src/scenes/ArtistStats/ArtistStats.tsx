@@ -54,7 +54,7 @@ export default function ArtistStats({ artistId, stats }: ArtistStatsProps) {
         title={stats.artist.name}
         subtitle={stats.artist.genres.map((genreName, i) => (
           <span key={genreName}>
-            <InlineGenre genreName={genreName} />
+            <InlineGenre size="normal" genreName={genreName} />
             {i + 1 < stats.artist.genres.length && ", "}
           </span>
         ))}
