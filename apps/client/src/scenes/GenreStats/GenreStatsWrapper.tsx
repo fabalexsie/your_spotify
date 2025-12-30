@@ -15,7 +15,9 @@ export default function GenreStatsWrapper() {
       <FullscreenCentered>
         <CircularProgress />
         <div>
-          <Text element="h3">Loading your stats</Text>
+          <Text element="h3" size="big">
+            Loading your stats
+          </Text>
         </div>
       </FullscreenCentered>
     );
@@ -24,7 +26,7 @@ export default function GenreStatsWrapper() {
   if ("code" in stats || !params.genrename) {
     return (
       <FullscreenCentered>
-        <Text element="h3">
+        <Text element="h3" size="normal">
           You never listened to this genre, might be someone else registered
         </Text>
       </FullscreenCentered>
