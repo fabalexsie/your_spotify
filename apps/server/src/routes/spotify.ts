@@ -41,7 +41,7 @@ import {
 } from "../tools/middleware";
 import { SpotifyRequest, LoggedRequest, Timesplit } from "../tools/types";
 import { toDate, toNumber } from "../tools/zod";
-import { uniq, uniqBy } from "../tools/misc";
+import { uniq } from "../tools/misc";
 
 export const router = Router();
 
@@ -252,12 +252,11 @@ const intervalPerSchemaNbOffset = z.object({
   ),
   nb: z.preprocess(toNumber, z.number().min(1).max(30)),
   offset: z.preprocess(toNumber, z.number().min(0).default(0)),
-  sortKey: z.string().default("count"),
 });
 
 router.get("/top/songs", isLoggedOrGuest, async (req, res) => {
   const { user } = req as LoggedRequest;
-  const { start, end, nb, offset, sortKey } = validate(
+  const { start, end, nb, offset } = validate(
     req.query,
     intervalPerSchemaNbOffset,
   );
@@ -268,7 +267,7 @@ router.get("/top/songs", isLoggedOrGuest, async (req, res) => {
 
 router.get("/top/artists", isLoggedOrGuest, async (req, res) => {
   const { user } = req as LoggedRequest;
-  const { start, end, nb, offset, sortKey } = validate(
+  const { start, end, nb, offset } = validate(
     req.query,
     intervalPerSchemaNbOffset,
   );
@@ -290,7 +289,7 @@ router.get("/top/genres", isLoggedOrGuest, async (req, res) => {
 
 router.get("/top/albums", isLoggedOrGuest, async (req, res) => {
   const { user } = req as LoggedRequest;
-  const { start, end, nb, offset, sortKey } = validate(
+  const { start, end, nb, offset } = validate(
     req.query,
     intervalPerSchemaNbOffset,
   );

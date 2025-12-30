@@ -24,9 +24,11 @@ export function startServer() {
       case "EACCES":
         console.error(`${bind} requires elevated privileges`);
         process.exit(1);
+        break;
       case "EADDRINUSE":
         console.error(`${bind} is already in use`);
         process.exit(1);
+        break;
       default:
         throw error;
     }
@@ -41,7 +43,7 @@ export function startServer() {
 
   connect()
     .then(async () => {
-      server.listen(port, "::");
+      server.listen(port);
       server.on("error", onError);
       server.on("listening", onListening);
       fixRunningImportsAtStart().catch(logger.error);
