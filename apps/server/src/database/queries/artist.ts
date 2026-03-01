@@ -76,6 +76,7 @@ export const getFirstAndLastListened = async (user: User, artistId: string) => {
 export const getMostListenedSongOfArtist = async (
   user: User,
   artistId: string,
+  count: number,
 ) => {
   const res = await InfosModel.aggregate([
     // Non sense to compute blacklist here
@@ -83,7 +84,7 @@ export const getMostListenedSongOfArtist = async (
     ...getArtistInfos(artistId),
     { $group: { _id: "$id", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
-    { $limit: 10 },
+    { $limit: count },
     {
       $lookup: {
         from: "tracks",

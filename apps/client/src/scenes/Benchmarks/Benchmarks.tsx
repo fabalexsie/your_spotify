@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Header from "../../components/Header";
 import {
   selectRawIntervalDetail,
@@ -73,11 +73,6 @@ export default function Benchmarks() {
       title: "Get album date ratio",
       request: () =>
         api.albumDateRatio(interval.start, interval.end, Timesplit.all),
-    },
-    {
-      title: "Get popularity per",
-      request: () =>
-        api.popularityPer(interval.start, interval.end, Timesplit.all),
     },
     {
       title: "Get different artists per",
@@ -209,7 +204,7 @@ export default function Benchmarks() {
             </TableCell>
           </TableHead>
           {requests.map(req => {
-            let elapsed;
+            let elapsed: ReactNode;
             const requestTimeElapsed = elapsedTime[req.title];
             if (requestTimeElapsed === NOT_FINISHED_REQUEST) {
               elapsed = <i>Loading...</i>;

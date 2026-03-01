@@ -307,17 +307,6 @@ Get ratio of songs featuring multiple artists.
 **Response:**
 - `200`: Ratio data for featured vs. non-featured tracks
 
-#### `GET /spotify/popularity_per`
-Get popularity metrics of listened tracks.
-
-**Query Parameters:**
-- `start`: date - Start date
-- `end`: date - End date (defaults to current time)
-- `timeSplit`: string - Time unit for grouping (day, week, month, year)
-
-**Response:**
-- `200`: Popularity distribution over time
-
 #### `GET /spotify/different_artists_per`
 Get count of unique artists listened to per time unit.
 

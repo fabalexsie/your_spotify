@@ -40,13 +40,11 @@ export interface SpotifyImage {
 export interface Artist {
   _id: string;
   external_urls: any;
-  followers: any;
   genres: string[];
   href: string;
   id: string;
   images: SpotifyImage[];
   name: string;
-  popularity: number;
   type: string;
   uri: string;
 }
@@ -61,16 +59,13 @@ export interface Album {
   _id: string;
   album_type: string;
   artists: string[];
-  available_markets: string[];
   copyrights: any[];
-  external_ids: any;
   external_urls: any;
   genres: string[];
   href: string;
   id: string;
   images: SpotifyImage[];
   name: string;
-  popularity: number;
   release_date: string;
   release_date_precision: string;
   //  "tracks": ,
@@ -86,17 +81,14 @@ export interface Track {
   _id: string;
   album: string; // Id of the album
   artists: string[]; // Ids of artists
-  available_markets: string[];
   disc_number: number;
   duration_ms: number;
   explicit: boolean;
-  external_ids: object;
   external_urls: object;
   href: string;
   id: string;
   is_local: boolean;
   name: string;
-  popularity: number;
   preview_url: string;
   track_number: number;
   type: string;

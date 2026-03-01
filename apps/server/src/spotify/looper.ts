@@ -1,4 +1,3 @@
- 
 import { MongoServerSelectionError } from "mongodb";
 import { AxiosError } from "axios";
 import { getCloseTrackId, getUser, getUserCount } from "../database";

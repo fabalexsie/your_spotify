@@ -9,7 +9,6 @@ import {
   getTimePer,
   albumDateRatio,
   featRatio,
-  popularityPer,
   differentArtistsPer,
   getDayRepartition,
   getBestArtistsPer,
@@ -209,14 +208,6 @@ router.get("/feat_ratio", isLoggedOrGuest, async (req, res) => {
   const { start, end, timeSplit } = validate(req.query, intervalPerSchema);
 
   const result = await featRatio(user, start, end, timeSplit);
-  res.status(200).send(result);
-});
-
-router.get("/popularity_per", isLoggedOrGuest, async (req, res) => {
-  const { user } = req as LoggedRequest;
-  const { start, end, timeSplit } = validate(req.query, intervalPerSchema);
-
-  const result = await popularityPer(user, start, end, timeSplit);
   res.status(200).send(result);
 });
 
@@ -543,10 +534,14 @@ router.post("/playlist/create", logged, withHttpClient, async (req, res) => {
       res.status(404).end();
       return;
     }
-    const mostListened = await getMostListenedSongOfArtist(user, artist.id);
+    const mostListened = await getMostListenedSongOfArtist(
+      user,
+      artist.id,
+      body.nb,
+    );
     spotifyIds = mostListened.map(item => item.track.id);
     if (!playlistName) {
-      playlistName = `My top of ${artist.id}`;
+      playlistName = `My top of ${artist.name}`;
     }
   } else {
     if (!playlistName) {

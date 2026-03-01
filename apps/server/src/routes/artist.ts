@@ -50,7 +50,7 @@ router.get("/:id/stats", isLoggedOrGuest, async (req, res) => {
   }
   const promises = [
     getFirstAndLastListened(user, id),
-    getMostListenedSongOfArtist(user, id),
+    getMostListenedSongOfArtist(user, id, 10),
     getMostListenedAlbumOfArtist(user, id),
     bestPeriodOfArtist(user, id),
     getTotalListeningOfArtist(user, id),

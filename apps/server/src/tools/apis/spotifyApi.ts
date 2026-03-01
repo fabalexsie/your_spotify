@@ -6,6 +6,8 @@ import { logger } from "../logger";
 import { chunk, wait } from "../misc";
 import { Spotify } from "../oauth/Provider";
 import { PromiseQueue } from "../queue";
+import { SpotifyAlbum } from "../../database/schemas/album";
+import { SpotifyArtist } from "../../database/schemas/artist";
 
 export const squeue = new PromiseQueue();
 
@@ -24,8 +26,6 @@ interface SpotifyPlaylist {
 export class SpotifyAPI {
   private client!: AxiosInstance;
 
-  private spotifyId!: string;
-
   constructor(private readonly userId: string) {}
 
   private async checkToken() {
@@ -42,7 +42,6 @@ export class SpotifyAPI {
     if (!user.spotifyId) {
       throw new Error("User has no spotify id");
     }
-    this.spotifyId = user.spotifyId;
     if (Date.now() > user.expiresIn - 1000 * 120) {
       const token = user.refreshToken;
       if (!token) {
@@ -102,7 +101,7 @@ export class SpotifyAPI {
     let nextUrl = "/me/playlists?limit=50";
     while (nextUrl) {
       const thisUrl = nextUrl;
-       
+
       const res = await squeue.queue(async () => {
         await this.checkToken();
         return this.client.get(thisUrl);
@@ -117,13 +116,13 @@ export class SpotifyAPI {
     const chunks = chunk(ids, 100);
     for (let i = 0; i < chunks.length; i += 1) {
       const chk = chunks[i]!;
-       
+
       await this.client.post(`/playlists/${id}/tracks`, {
         uris: chk.map(trackId => `spotify:track:${trackId}`),
       });
       if (i !== chunks.length - 1) {
         // Cannot queue inside queue, will cause infinite wait
-         
+
         await wait(1000);
       }
     }
@@ -139,26 +138,77 @@ export class SpotifyAPI {
   public async createPlaylist(name: string, ids: string[]) {
     await squeue.queue(async () => {
       await this.checkToken();
-      const { data } = await this.client.post(
-        `/users/${this.spotifyId}/playlists`,
-        {
-          name,
-          public: true,
-          collaborative: false,
-          description: "",
-        },
-      );
+      const { data } = await this.client.post(`/me/playlists`, {
+        name,
+        public: true,
+        collaborative: false,
+        description: "",
+      });
       return this.internAddToPlaylist(data.id, ids);
     });
   }
 
-  async getTracks(spotifyIds: string[]) {
-    const res = await squeue.queue(async () => {
-      await this.checkToken();
-      return this.client.get(`/tracks?ids=${spotifyIds.join(",")}`);
-    });
+  async getTrack(id: string) {
+    try {
+      const res = await squeue.queue(async () => {
+        await this.checkToken();
+        return this.client.get(`/tracks/${id}`);
+      });
+      return res.data as SpotifyTrack;
+    } catch {
+      return undefined;
+    }
+  }
 
-    return res.data.tracks as (SpotifyTrack | null)[];
+  async getTracks(spotifyIds: string[]) {
+    const tracks: (SpotifyTrack | undefined)[] = [];
+    for (const id of spotifyIds) {
+      const track = await this.getTrack(id);
+      tracks.push(track);
+    }
+    return tracks;
+  }
+
+  async getAlbum(id: string) {
+    try {
+      const res = await squeue.queue(async () => {
+        await this.checkToken();
+        return this.client.get(`/albums/${id}`);
+      });
+      return res.data as SpotifyAlbum;
+    } catch {
+      return undefined;
+    }
+  }
+
+  async getAlbums(spotifyIds: string[]) {
+    const albums: (SpotifyAlbum | undefined)[] = [];
+    for (const id of spotifyIds) {
+      const album = await this.getAlbum(id);
+      albums.push(album);
+    }
+    return albums;
+  }
+
+  async getArtist(id: string) {
+    try {
+      const res = await squeue.queue(async () => {
+        await this.checkToken();
+        return this.client.get(`/artists/${id}`);
+      });
+      return res.data as SpotifyArtist;
+    } catch {
+      return undefined;
+    }
+  }
+
+  async getArtists(spotifyIds: string[]) {
+    const artists: (SpotifyArtist | undefined)[] = [];
+    for (const id of spotifyIds) {
+      const artist = await this.getArtist(id);
+      artists.push(artist);
+    }
+    return artists;
   }
 
   public async search(track: string, artist: string) {
