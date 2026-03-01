@@ -13,8 +13,8 @@ git merge upstream/master
 if [ $? -ne 0 ]; then
   echo -e "${YELLOW}Automatic merge failed. Please resolve conflicts manually.${NC}"
   echo -e "${YELLOW}After resolving conflicts, run ${CYAN}'git merge --continue'${YELLOW} to complete the merge.${NC}"
-  LATEST_TAG=$(git describe --tags --abbrev=0)
-  echo -e "${YELLOW}The latest tag is ${CYAN}$LATEST_TAG${YELLOW}. Add it to your commit message.${NC}"
+  echo -e "${YELLOW}After merging, get the latest tag and amend it to your commit message:${NC}"
+  echo -e "${CYAN}git commit --amend -m \"\$(git log -1 --pretty=%B) (\$(git describe --tags --abbrev=0))\"${NC}"
   echo -e "${YELLOW}After that, you can push the changes to your forked repository with ${CYAN}'git push origin master'${YELLOW}.${NC}"
   exit 1
 fi
