@@ -10,6 +10,7 @@ export function useInfiniteScroll<T>(
     nb: number,
     offset: number,
   ) => Promise<{ data: T[] }>,
+  filter?: (item: T) => boolean,
 ) {
   const [items, setItems] = useState<T[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -25,10 +26,13 @@ export function useInfiniteScroll<T>(
         DEFAULT_ITEMS_TO_LOAD,
         isNew ? 0 : items.length,
       );
+      const filteredData = filter
+        ? result.data.filter(filter)
+        : result.data;
       if (isNew) {
-        setItems([...result.data] as T[]);
+        setItems([...filteredData]);
       } else {
-        setItems([...items, ...result.data] as T[]);
+        setItems([...items, ...filteredData]);
       }
       setHasMore(result.data.length === DEFAULT_ITEMS_TO_LOAD);
     } catch (e) {

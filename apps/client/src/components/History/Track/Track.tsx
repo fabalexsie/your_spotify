@@ -19,7 +19,7 @@ interface TrackProps {
   listenedAt?: Date;
   track: TrackType;
   artists: Artist[];
-  album: Album;
+  album?: Album;
 }
 
 export default function Track({
@@ -33,7 +33,7 @@ export default function Track({
   const columns = [
       {
         ...trackGrid.cover,
-        node: <PlayButton id={track.id} covers={album.images} />,
+        node: <PlayButton id={track.id} covers={album?.images ?? []} />,
       },
       {
         ...trackGrid.title,
@@ -53,7 +53,7 @@ export default function Track({
       },
       {
         ...trackGrid.album,
-        node: !isTablet && (
+        node: !isTablet && album && (
           <InlineAlbum className="otext" size="normal" album={album} />
         ),
       },
