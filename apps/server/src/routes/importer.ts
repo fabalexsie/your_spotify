@@ -13,7 +13,7 @@ import {
   getImporterState,
   getUserImporterState,
 } from "../database/queries/importer";
-import { ImporterState, ImporterStateTypes } from "../tools/importers/types";
+import { ImporterStateType } from "../tools/importers/types";
 
 export const router = Router();
 
@@ -27,9 +27,9 @@ const upload = multer({
 
 router.post(
   "/import/privacy",
-  upload.array("imports", 50),
   logged,
   notAlreadyImporting,
+  upload.array("imports", 50),
   async (req, res) => {
     const { files, user } = req as LoggedRequest;
 
@@ -45,7 +45,7 @@ router.post(
 
     runImporter(
       null,
-      ImporterStateTypes.privacy,
+      "privacy",
       user._id.toString(),
       (files as Express.Multer.File[]).map(f => f.path),
       success => {
@@ -62,9 +62,9 @@ router.post(
 
 router.post(
   "/import/full-privacy",
-  upload.array("imports", 50),
   logged,
   notAlreadyImporting,
+  upload.array("imports", 50),
   async (req, res) => {
     const { files, user } = req as LoggedRequest;
 
@@ -80,7 +80,7 @@ router.post(
 
     runImporter(
       null,
-      ImporterStateTypes.fullPrivacy,
+      "full-privacy",
       user._id.toString(),
       (files as Express.Multer.File[]).map(f => f.path),
       success => {
@@ -104,7 +104,7 @@ router.post("/import/retry", logged, notAlreadyImporting, async (req, res) => {
   const { existingStateId } = validate(req.body, retrySchema);
 
   const importState =
-    await getImporterState<ImporterState["type"]>(existingStateId);
+    await getImporterState<ImporterStateType>(existingStateId);
   if (!importState || importState.user.toString() !== user._id.toString()) {
     res.status(404).end();
     return;

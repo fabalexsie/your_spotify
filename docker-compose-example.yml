@@ -15,7 +15,8 @@ services:
       SPOTIFY_SECRET: __your_spotify_secret__
 
   mongo:
-    image: mongo:6
+    container_name: mongo
+    image: mongo:8
     restart: unless-stopped
     volumes:
       - your_spotify_db:/data/db
